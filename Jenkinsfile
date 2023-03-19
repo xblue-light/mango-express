@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        nodejs '17.3.1'
+    }
     stages {
         stage('Build') {
             steps {
@@ -11,7 +14,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying node application..."
-                sh 'node ./src/index.js'
+                sh 'pm2 start ./src/index.js'
             }
         }
     }
