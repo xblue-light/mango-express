@@ -1,21 +1,17 @@
 pipeline {
     agent any
-    tools {
-        nodejs '18.14.2'
-    }
     stages {
         stage('Build') {
             steps {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
-                echo "Building node dependencies..."
-                sh 'npm version'
-                sh 'npm install'
+                echo "Building docker image..."
+                sh 'docker build -t express-mango:1.0 .'
             }
         }
         stage('Deploy') {
             steps {
-                echo "Deploying node application..."
-                sh 'pm2 start ./src/index.js'
+                echo "Run docker image and expose port 4444:3000"
+                sh 'docker run -d -p 4444:3000 express-mango:1.0'
             }
         }
     }
