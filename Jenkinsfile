@@ -5,13 +5,13 @@ pipeline {
             steps {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
                 echo "Building node dependencies..."
-                npm install
+                sh 'npm install'
             }
         }
         stage('Deploy') {
             steps {
                 echo "Deploying node application..."
-                node ./src/index.js
+                sh 'node ./src/index.js'
             }
         }
     }
