@@ -1,0 +1,1 @@
+docker run -d -p 4444:3000 express-app:1.0
