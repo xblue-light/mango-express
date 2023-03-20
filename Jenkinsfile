@@ -12,7 +12,8 @@ pipeline {
         stage('Login Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh 'docker login -u $USERNAME --password-stdin $PASSWORD'
+                    // sh 'docker login -u $USERNAME --password-stdin $PASSWORD'
+                    sh 'echo "$PASSWORD" | docker login -u $USERNAME --password-stdin'
                 }
 
                 echo 'Try pulling image from private image repository'
