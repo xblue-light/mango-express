@@ -14,9 +14,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     // WARNING! Using --password via the CLI is insecure. Use --password-stdin.
                     // sh 'docker login -u $USERNAME -p $PASSWORD'
-                    
+
                     // The following example reads a password from a variable, and passes it to the docker login command using STDIN:
-                    sh 'echo "$PASSWORD" | docker login -u $USERNAME --password-stdin'
+                    sh 'echo -n "$PASSWORD" | docker login -u $USERNAME --password-stdin'
                 }
 
                 echo 'Try pulling image from private image repository'
