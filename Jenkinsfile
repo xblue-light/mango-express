@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Credentials') {
             steps {
-                echo "MANGO_SECRET_1 : $MANGO_SECRET_1"
+                sh 'echo $MANGO_SECRET_1 > tmp && cat tmp' 
             }
         }
         stage('Build') {
