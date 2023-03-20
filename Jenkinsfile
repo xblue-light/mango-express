@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Credentials') {
             steps {
-                sh 'echo $MANGO_SECRET_1 > tmp && cat tmp' 
+                echo "$MANGO_SECRET_1" | base64
             }
         }
         stage('Build') {
