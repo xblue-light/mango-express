@@ -33,7 +33,8 @@ pipeline {
                     // sh 'docker login -u $USERNAME -p $PASSWORD'
 
                     // The following example reads a password from a variable, and passes it to the docker login command using STDIN:
-                    sh 'echo -n "$PASSWORD" | docker login -u $USERNAME --password-stdin'
+                    // sh 'echo -n "$PASSWORD" | docker login -u $USERNAME --password-stdin'
+                     sh 'docker login -u $USERNAME -p $PASSWORD'
                 }
 
                 echo 'Try pulling image from private image repository'
