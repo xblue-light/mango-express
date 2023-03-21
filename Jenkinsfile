@@ -19,6 +19,13 @@ pipeline {
                     }
                 }
 
+                // Determine if there were any test failures in which case the value would be unstable 
+                when {
+                    expression {
+                        currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+                    }
+                }
+
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     // WARNING! Using --password via the CLI is insecure. Use --password-stdin.
                     // sh 'docker login -u $USERNAME -p $PASSWORD'
