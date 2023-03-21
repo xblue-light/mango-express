@@ -10,9 +10,10 @@ pipeline {
 
                 // Simulate a failed build
                 script {
+                    currentBuild.result = 'FAILURE'
+                    echo "The build failed forcefully!"
                     if (currentBuild.result == 'SUCCESS') {
                         currentBuild.result = 'FAILURE'
-                        echo "The build failed forcefully!"
                     }
                 }
             }
@@ -25,7 +26,7 @@ pipeline {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS' 
                 }
             }
-            
+
             steps {
 
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
