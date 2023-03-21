@@ -32,6 +32,17 @@ pipeline {
             }
         }
         stage('Deploy') {
+
+            // Simulate a failed build
+            currentBuild.result = 'FAILURE'
+
+            // Determine if there were any test failures in which case the value would be unstable 
+            when {
+              expression {
+                currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+              }
+            }
+            
             steps {
                 echo "Run docker image and expose port 4444:3000"
                 sh 'docker run -d -p 4444:3000 express-mango:1.0'
