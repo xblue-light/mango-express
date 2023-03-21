@@ -7,22 +7,25 @@ pipeline {
         stage('Credentials') {
             steps {
                 sh 'echo "$MANGO_SECRET_1" | base64'
+
+                // Simulate a failed build
+                script {
+                    if (currentBuild.result == 'SUCCESS') {
+                        currentBuild.result = 'FAILURE'
+                        echo "The build failed forcefully!"
+                    }
+                }
             }
         }
         stage('Login Docker Hub') {
-            // Simulate a failed build
-            script {
-                if (currentBuild.result == 'SUCCESS') {
-                    currentBuild.result = 'FAILURE'
-                    echo "The build failed forcefully!"
-                }
-            }
+
             // Determine if there were any test failures in which case the value would be unstable 
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS' 
                 }
             }
+            
             steps {
 
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
