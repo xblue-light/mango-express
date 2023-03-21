@@ -11,6 +11,14 @@ pipeline {
         }
         stage('Login Docker Hub') {
             steps {
+
+                // Simulate a failed build
+                script {
+                    if (currentBuild.result == 'SUCCESS') {
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     // WARNING! Using --password via the CLI is insecure. Use --password-stdin.
                     // sh 'docker login -u $USERNAME -p $PASSWORD'
@@ -30,12 +38,7 @@ pipeline {
                 echo "Building docker image..."
                 sh 'docker build -t express-mango:1.0 .'
 
-                // Simulate a failed build
-                script {
-                    if (currentBuild.result == 'SUCCESS') {
-                        currentBuild.result = 'FAILURE'
-                    }
-                }
+
             }
         }
         stage('Deploy') {
