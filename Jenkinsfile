@@ -10,21 +10,20 @@ pipeline {
             }
         }
         stage('Login Docker Hub') {
+            // Simulate a failed build
+            script {
+                if (currentBuild.result == 'SUCCESS') {
+                    currentBuild.result = 'FAILURE'
+                    echo "The build failed forcefully!"
+                }
+            }
+            // Determine if there were any test failures in which case the value would be unstable 
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+                }
+            }
             steps {
-
-                // Simulate a failed build
-                script {
-                    if (currentBuild.result == 'SUCCESS') {
-                        currentBuild.result = 'FAILURE'
-                    }
-                }
-
-                // Determine if there were any test failures in which case the value would be unstable 
-                when {
-                    expression {
-                        currentBuild.result == null || currentBuild.result == 'SUCCESS' 
-                    }
-                }
 
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     // WARNING! Using --password via the CLI is insecure. Use --password-stdin.
