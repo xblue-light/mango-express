@@ -29,20 +29,24 @@ pipeline {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
                 echo "Building docker image..."
                 sh 'docker build -t express-mango:1.0 .'
+
+                // Simulate a failed build
+                script {
+                    if (currentBuild.result == 'SUCCESS') {
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
             }
         }
         stage('Deploy') {
 
-            // Simulate a failed build
-            currentBuild.result = 'FAILURE'
-
             // Determine if there were any test failures in which case the value would be unstable 
             when {
-              expression {
-                currentBuild.result == null || currentBuild.result == 'SUCCESS' 
-              }
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+                }
             }
-            
+
             steps {
                 echo "Run docker image and expose port 4444:3000"
                 sh 'docker run -d -p 4444:3000 express-mango:1.0'
