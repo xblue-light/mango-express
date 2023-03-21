@@ -4,6 +4,7 @@ pipeline {
         MANGO_SECRET_1 = credentials('0b5cf62f-5c0f-43f9-a32e-0d006eb2a5a6')
     }
     stages {
+
         stage('Credentials') {
             steps {
                 sh 'echo "$MANGO_SECRET_1" | base64'
@@ -12,15 +13,13 @@ pipeline {
                 script {
                     currentBuild.result = 'FAILURE'
                     echo "The build failed forcefully!"
-                    if (currentBuild.result == 'SUCCESS') {
-                        currentBuild.result = 'FAILURE'
-                    }
                 }
             }
         }
+
         stage('Login Docker Hub') {
 
-            // Determine if there were any test failures in which case the value would be unstable 
+            // SKIP STAGE DUE TO WHEN CONDITIONAL
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS' 
@@ -42,7 +41,14 @@ pipeline {
                 sh 'docker images'
             }
         }
+
         stage('Build') {
+            // SKIP STAGE DUE TO WHEN CONDITIONAL
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+                }
+            }
             steps {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
                 echo "Building docker image..."
@@ -53,7 +59,7 @@ pipeline {
         }
         stage('Deploy') {
 
-            // Determine if there were any test failures in which case the value would be unstable 
+            // SKIP STAGE DUE TO WHEN CONDITIONAL
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS' 
