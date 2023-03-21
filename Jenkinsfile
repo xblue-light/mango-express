@@ -10,10 +10,10 @@ pipeline {
                 sh 'echo "$MANGO_SECRET_1" | base64'
 
                 // Simulate a failed build
-                script {
-                    currentBuild.result = 'FAILURE'
-                    echo "The build failed forcefully!"
-                }
+                // script {
+                //     currentBuild.result = 'FAILURE'
+                //     echo "The build failed forcefully!"
+                // }
             }
         }
 
